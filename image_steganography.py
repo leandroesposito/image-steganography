@@ -139,7 +139,7 @@ def showImgCapacity(imgPath:str) -> list:
     """
     img = cv.imread(imgPath)
 
-    totalitems = img.shape[0] * img.shape[1] * img.shape[2]
+    totalitems = img.shape[0] * img.shape[1] * img.shape[2] - 2
 
     print(f"This image with dimensions {img.shape[0]} * {img.shape[1]} * {img.shape[2]} can store:")
     for i in range(1, 9):
@@ -154,7 +154,8 @@ def showTextSize(text:str) -> int:
 
         return {int} text size in bits
     """
-    binCharList = textToBinList(text)
+    textToStore = f"{len(text)}\n{text}"
+    binCharList = textToBinList(textToStore)
     bitsPerChar = len(max(binCharList, key=len))
 
     totalSize = bitsPerChar * len(binCharList)
@@ -174,7 +175,7 @@ def testTextInImg(text:str, imgPath:str):
         print("Not enough space in the image to store the text")
     else:
         # get min index of imageCapacities bigger than image size
-        print(f"Best config to store the text is to use last {min([i + 1 for i in range(len(imageCapacities)) if imageCapacities[i] > textSize])} bits")
+        print(f"Best config to store the text is to use last {min([i + 1 for i in range(len(imageCapacities)) if imageCapacities[i] >= textSize])} bits")
 
 def checkStoredText(text, imgPath):
     print("Checking new stored image")
