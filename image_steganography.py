@@ -66,10 +66,6 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
     for y in range(height):
         for x in range(width):
             for channel in range(channels):
-                # prevent writing on last pixel to maintain the value of bitsPerChar and bitsToChange
-                if y >= height - 1 and x >= width - 1 and channel >= channels - 2:
-                    break
-
                 # get binary value of pixel channel
                 # [2:] remove "bx" at the beginning of the string
                 binChannel = bin(img.item(y, x, channel))[2:]
