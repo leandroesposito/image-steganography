@@ -53,7 +53,7 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
     # pixel of the image to use in extraction
     img.itemset((height - 1, width - 1, channels - 1), bitsPerChar)
     img.itemset((height - 1, width - 1, channels - 2), bitsToChange)
-    
+
     img_max_capacity = ((channels * ((height - 1) * width + (width - 1) + 1)) - 2) * bitsToChange    
     if img_max_capacity < len(binText):
         raise Exception("Not enough space in the image with current config. Run command with --test-text-img parameter to get recommendations")
@@ -72,15 +72,14 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
                 img.itemset((y, x, channel), int(newBinChannel, base=2))
 
                 index += bitsToChange
-                
-    return img
+                if index >= len(binText):
+                    return img
 
 def readTextFromImg(imgPath:str) -> str:
     img = cv.imread(imgPath)
     
     # convert numpy.ndarray to list to easy itteration
     flattenImg = img.flatten()
-    
     # extract data from the last pixel
     bitsPerChar = int(flattenImg[-1])
     changedBits = int(flattenImg[-2])
