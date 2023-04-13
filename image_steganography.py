@@ -241,7 +241,7 @@ if __name__ == "__main__":
     
     parser.add_argument("--check-text", "-ct", action="store_true", help="Check text size")
     parser.add_argument("--check-img", "-ci", action="store_true", help="Check image capacity")
-    parser.add_argument("--test-text-img", "-tti", action="store_true", help="Test if text fits inside image and recomend best configuration")
+    parser.add_argument("--test-text-img", "-tti", action="store_true", help="Test if text fits inside image and recommend best configuration")
     
     parser.add_argument("--text", "-t", type=str, help="Text to store")
     parser.add_argument("--obfuscate", "-o", type=str, help="Obfuscate text using Vigenère cipher with provided key")
