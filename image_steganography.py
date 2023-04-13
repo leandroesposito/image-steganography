@@ -1,8 +1,3 @@
-# informacion:
-# bits per char
-# bits changed
-# text length
-#  #
 import cv2 as cv
 import os
 from units import convert_bytes
@@ -217,20 +212,20 @@ def main(argv):
         if obfuscateKey:
             text = obfuscator.encode(text, obfuscateKey)
 
-    if (store and imgPath and text and bitsToChange):    # store text in image
+    if (store and imgPath and text and bitsToChange):   # store text in image
         storeTextInImg(text, imgPath, bitsToChange)
-    elif (extract and imgPath):                        # extract text from image
+    elif (extract and imgPath):                         # extract text from image
         extractedText = readTextFromImg(imgPath)
         
         if desobfuscateKey:
             extractedText = obfuscator.decode(extractedText, desobfuscateKey)
         
         print(extractedText)
-    elif (testTextAndImg and imgPath and text):        # test text in image
+    elif (testTextAndImg and imgPath and text):         # test text in image
         testTextInImg(text, imgPath)
-    elif (checkText and text):               # check text size
+    elif (checkText and text):                          # check text size
         showTextSize(text)
-    elif (checkImg and imgPath):                          # check image capacity
+    elif (checkImg and imgPath):                        # check image capacity
         showImgCapacity(imgPath)
 
 if __name__ == "__main__":
@@ -249,8 +244,6 @@ if __name__ == "__main__":
     parser.add_argument("--image-path", "-i", type=str, help="Image that will store the text")
     parser.add_argument("--txt-file", "-txt", type=str, help="Text file .txt with the text to store")
     parser.add_argument("--bits-to-change", "-b", type=int, help="Number of las N bits to change in pixel channels")
-    # create image from text
-    # obfuscate text before adding to image using a char to add its ascii code #    
 
     argv = parser.parse_args()
 
@@ -266,12 +259,13 @@ if __name__ == "__main__":
     txt = argv.txt_file
     b = argv.bits_to_change
 
+    # check arguments combinations
     if (
         (s and i and (bool(t) ^ bool(txt)) and b) or    # store text in image
-        (e and i) or                        # extract text from image
+        (e and i) or                                    # extract text from image
         (tti and i and (bool(t) ^ bool(txt))) or        # test text in image
         (ct and (bool(t) ^ bool(txt))) or               # check text size
-        (ci and i)                          # check image capacity
+        (ci and i)                                      # check image capacity
         ):
         main(argv)
 
