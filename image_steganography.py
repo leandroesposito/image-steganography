@@ -56,6 +56,10 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
     img.itemset((height - 1, width - 1, channels - 1), bitsPerChar)
     img.itemset((height - 1, width - 1, channels - 2), bitsToChange)
     
+    img_max_capacity = ((channels * ((height - 1) * width + (width - 1) + 1)) - 2) * bitsToChange    
+    if img_max_capacity < len(binText):
+        raise Exception("Not enough space in the image with current config. Run command with --test-text-img parameter to get recommendations")
+
     for y in range(height):
         for x in range(width):
             for channel in range(channels):
@@ -75,10 +79,7 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
 
                 index += bitsToChange
                 
-                if index >= len(binText):
-                    return img
-    
-    raise Exception("Not enough space in the image with current config.")
+    return img
 
 def readTextFromImg(imgPath:str) -> str:
     img = cv.imread(imgPath)
