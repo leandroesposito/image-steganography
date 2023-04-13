@@ -31,6 +31,9 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
 
         return {numpy.ndarray} an image with the text stored
     """
+
+    assert bitsToChange <= 8, "Max capacity of every pixel channel is 8 bits"
+
     # add the length of the text before the text to later use in extraction
     textToStore = f"{len(text)}\n{text}"
 
