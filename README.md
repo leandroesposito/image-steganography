@@ -55,7 +55,7 @@ Example
 py image_steganography.py --check-img --image-path "<path-to-image>"
 ```
 
-### Check if text fits inside image and get lowest value of last n bits to use.
+### Check if text fits inside image and get lowest possible value of last n bits to use.
 Example 
 
 ```
