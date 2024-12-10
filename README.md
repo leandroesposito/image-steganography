@@ -48,7 +48,7 @@ This project provides a command-line utility for storing and extracting text wit
      py image_steganography.py --test-text-img --text "text-to-store" --image-path "path-to-image"
      ```
 
-This utility is a powerful tool for anyone interested in digital privacy, data management, or simply exploring the fascinating field of steganography.
+This utility is a powerful tool for anyone interested in digital privacy, data management, or simply exploring the field of steganography.
 
 ## Requirements
   - Python 3.
