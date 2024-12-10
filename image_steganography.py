@@ -54,7 +54,7 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
     img.itemset((height - 1, width - 1, channels - 1), bitsPerChar)
     img.itemset((height - 1, width - 1, channels - 2), bitsToChange)
 
-    img_max_capacity = ((channels * ((height - 1) * width + (width - 1) + 1)) - 2) * bitsToChange    
+    img_max_capacity = ((channels * ((height - 1) * width + (width - 1) + 1)) - 2) * bitsToChange
     if img_max_capacity < len(binText):
         raise Exception("Not enough space in the image with current config. Run command with --test-text-img parameter to get recommendations")
 
@@ -77,15 +77,15 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
 
 def readTextFromImg(imgPath:str) -> str:
     img = cv.imread(imgPath)
-    
+
     # convert numpy.ndarray to list to easy itteration
     flattenImg = img.flatten()
     # extract data from the last pixel
     bitsPerChar = int(flattenImg[-1])
     changedBits = int(flattenImg[-2])
 
-    # convert every item of list to binary 
-    # [:2] removes "0b" from beginning 
+    # convert every item of list to binary
+    # [:2] removes "0b" from beginning
     # [-changedBits:] extract last changed bits from binary
     # zfill() add 0 in case if the value es a single 0 #
     binImg = "".join([bin(b)[2:][-changedBits:].zfill(changedBits) for b in flattenImg])
@@ -108,16 +108,16 @@ def getTextFromBin(binary:str, bitsPerChar:int) -> str:
     # split one binary string into its characters
     charBins = [binary[i: i+bitsPerChar] for i in range(0, len(binary), bitsPerChar)]
     textLenght = ""
-    
+
     # scan char by char until we find a "\n" to get the text length
     start = 0
     while chr(int(charBins[start], base=2)) != "\n":
         textLenght += chr(int(charBins[start], base=2))
         start += 1
-    
+
     textLenght = int(textLenght)
 
-    # convert each binary character between the first "\n" and text lenght then join them into a string 
+    # convert each binary character between the first "\n" and text lenght then join them into a string
     extractedText = "".join([chr(int(b, base=2)) for i, b in enumerate(charBins) if i > start and i <= start + textLenght])
     return extractedText
 
@@ -131,11 +131,11 @@ def showImgCapacity(imgPath:str) -> list:
 
     totalitems = img.shape[0] * img.shape[1] * img.shape[2] - 2
 
-    print(f"This image with dimensions {img.shape[0]} * {img.shape[1]} * {img.shape[2]} can store:")
+    print(f"This image with dimensions {img.shape[1]} x {img.shape[0]} x {img.shape[2]} can store:")
     for i in range(1, 9):
         print(f"\t {convert_bytes((totalitems * i) / 8)} using last {i} bits.")
 
-    # return 
+    # return
     return [totalitems * i for i in range(1, 9)]
 
 def showTextSize(text:str) -> int:
@@ -149,7 +149,7 @@ def showTextSize(text:str) -> int:
     bitsPerChar = len(max(binCharList, key=len))
 
     totalSize = bitsPerChar * len(binCharList)
-    
+
     print(f"The text size is: {convert_bytes(totalSize / 8)}")
 
     return totalSize
@@ -159,7 +159,7 @@ def testTextInImg(text:str, imgPath:str):
         print text size and image capacities using different last n bits and the minimun recommended to use
     """
     textSize = showTextSize(text)
-    imageCapacities = showImgCapacity(imgPath)    
+    imageCapacities = showImgCapacity(imgPath)
 
     if(textSize > imageCapacities[-1]):
         print("Not enough space in the image to store the text")
@@ -180,7 +180,7 @@ def checkStoredText(text, imgPath):
 
 def storeTextInImg(text:str, imgPath:str, bitsToChange:int):
     newImgPath = os.path.splitext(imgPath)[0] + "_new.png"
-    
+
     print("Saving new image")
     cv.imwrite(newImgPath, writeTextToImage(text, imgPath, bitsToChange))
 
@@ -201,12 +201,12 @@ def main(argv):
 
     obfuscateKey = argv.obfuscate
     desobfuscateKey = argv.desobfuscate
-    
+
 
     if text is None and argv.txt_file is not None:
         with open(txtFile, encoding="utf-8") as f:
             text = f.read()
-    
+
     if text is not None:
         if obfuscateKey:
             text = obfuscator.encode(text, obfuscateKey)
@@ -215,10 +215,10 @@ def main(argv):
         storeTextInImg(text, imgPath, bitsToChange)
     elif (extract and imgPath):                         # extract text from image
         extractedText = readTextFromImg(imgPath)
-        
+
         if desobfuscateKey:
             extractedText = obfuscator.decode(extractedText, desobfuscateKey)
-        
+
         print(extractedText)
     elif (testTextAndImg and imgPath and text):         # test text in image
         testTextInImg(text, imgPath)
@@ -232,11 +232,11 @@ if __name__ == "__main__":
 
     parser.add_argument("--store", "-s", action="store_true", help="Store text in an image")
     parser.add_argument("--extract", "-e", action="store_true", help="Extract text from an image")
-    
+
     parser.add_argument("--check-text", "-ct", action="store_true", help="Check text size")
     parser.add_argument("--check-img", "-ci", action="store_true", help="Check image capacity")
     parser.add_argument("--test-text-img", "-tti", action="store_true", help="Test if text fits inside image and recommend best configuration")
-    
+
     parser.add_argument("--text", "-t", type=str, help="Text to store")
     parser.add_argument("--obfuscate", "-o", type=str, help="Obfuscate text using Vigenère cipher with provided key")
     parser.add_argument("--desobfuscate", "-d", type=str, help="Decode obfuscated text")
