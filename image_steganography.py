@@ -51,8 +51,8 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
 
     # store number of bits used per character and number of bits changed in every pixel channel on the last
     # pixel of the image to use in extraction
-    img.itemset((height - 1, width - 1, channels - 1), bitsPerChar)
-    img.itemset((height - 1, width - 1, channels - 2), bitsToChange)
+    img[height - 1][width - 1][channels - 1] = bitsPerChar
+    img[height - 1][width - 1][channels - 2] = bitsToChange
 
     img_max_capacity = ((channels * ((height - 1) * width + (width - 1) + 1)) - 2) * bitsToChange
     if img_max_capacity < len(binText):
@@ -69,7 +69,7 @@ def writeTextToImage(text:str, imgPath:str, bitsToChange:int) -> list:
                 newBinChannel = binChannel[:-bitsToChange] + binText[index:index + bitsToChange].ljust(bitsToChange, "0")
 
                 # replace old pixel channel with modified
-                img.itemset((y, x, channel), int(newBinChannel, base=2))
+                img[y][x][channel] = int(newBinChannel, base=2)
 
                 index += bitsToChange
                 if index >= len(binText):
